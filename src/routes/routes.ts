@@ -11,4 +11,7 @@ export default function  (api:Server){
              return res.status(500).send(error);
         }
     });
+
+    api.get()
 }
+

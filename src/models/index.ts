@@ -46,12 +46,12 @@ class DB {
         console.log(this.models.Product);
         console.log(this.models.Parking);
         //relations
-        this.models.Parking.hasOne(this.models.CostParking);
+        this.models.Parking.hasMany(this.models.CostParking);
         this.models.Parking.hasMany(this.models.IORegistry);
         this.models.Parking.hasMany(this.models.User);
         this.models.Parking.belongsToMany(this.models.Administrator,{through:'AdministratorParking'});
 
-       // this.models.CostParking.hasOne(this.models.Parking);
+       this.models.CostParking.belongsTo(this.models.Parking);
 
         this.models.IORegistry.belongsTo(this.models.User);
         this.models.IORegistry.belongsTo(this.models.Parking);
