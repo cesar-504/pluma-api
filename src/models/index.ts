@@ -4,7 +4,7 @@ import * as Sequelize from 'sequelize';
 import {ProductAttributes, ProductInstance} from './productModel'
 import {AdministratorAttributes,AdministratorInstance} from './administratorModel'
 import {CostParkingAttributes,CostParkingInstance} from './costParkingModel'
-import { IORegistryAttributes,IORegistryInstance } from './IORegistry';
+import { IORegistryAttributes,IORegistryInstance } from './IORegistryModel';
 import { ParkingAttributes,ParkingInstance } from './parkingModel';
 import {UserAttributes,UserInstance} from './userModel';
 import * as dbConfig from '../config/sequelize/databaseConfig'

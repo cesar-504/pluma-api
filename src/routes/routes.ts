@@ -13,6 +13,11 @@ export default function  (api: Server) {
         }
     });
     let p = new ParkingController();
+
     api.get('/api', p.find);
+    api.get('/api/:id', p.findByID);
+    api.post('/api', (p.create));
+    api.put('/api/:id', p.update);
+    api.del('/api/:id', p.delete);
 
 }

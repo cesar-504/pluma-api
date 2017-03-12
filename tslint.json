@@ -6,6 +6,10 @@
         "quotemark": [
             true,
             "single"
-        ]
+        ],
+        "no-console": [],
+        "member-access": false
+
     }
+
 }

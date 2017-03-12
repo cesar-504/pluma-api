@@ -13,6 +13,7 @@ api.use(restify.CORS());
 api.pre(restify.pre.sanitizePath());
 api.use(restify.acceptParser(api.acceptable));
 api.use(restify.bodyParser());
+api.use(restify.jsonp());
 api.use(restify.queryParser());
 api.use(restify.authorizationParser());
 api.use(restify.fullResponse());

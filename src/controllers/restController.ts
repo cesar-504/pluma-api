@@ -1,56 +1,54 @@
 import { Next, Request, Response } from 'restify';
 import * as Sequelize from 'sequelize';
 import {models} from '../models/index';
+import { ParkingAttributes, ParkingInstance } from '../models/parkingModel';
+
 export default class RestController<TInstance, TAttributes> {
-    private model: Sequelize.Model<TInstance, TAttributes>;
-    constructor(model: Sequelize.Model<TInstance, TAttributes>) {
-        this.model = model;
-        console.log(this.model.all());
+    constructor(public model: Sequelize.Model<TInstance, TAttributes>) {
     }
-    public async find(req: Request, res: Response) {
+    find = async(req: Request, res: Response) => {
         console.log(this.model);
         try {
-            
-            return  res.send(await models.Parking.all());
+            res.send(await this.model.all());
         }catch (error) {
-            console.log(error);
-            return await res.status(500).send(error);
+            res.send(error);
         }
-
     }
-    public async findByID(req: Request, res: Response) {
+    findByID = async (req: Request, res: Response) => {
         try {
             let item = await this.model.findById(req.params.id);
-            // tslint:disable-next-line:curly
             if (item) return res.send(item);
-            return res.status(404);
+            return res.send(404, 'not found');
 
         }catch (error){
-            return res.status(500).send(error);
+            return res.send(error);
         }
     }
-    public async create(req: Request, res: Response){
+    create = async (req: Request, res: Response) => {
         try {
-             let item = await this.model.create(req.body);
-             return res.status(201).send(item);
-        }catch (error){
-            return res.status(409).send(error);
+             let item = await this.model.create(req.body );
+             return res.send(201, item);
+        }catch (error) {
+            return res.send(error);
         }
     }
-    public async update(req: Request, res: Response) {
+    update = async (req: Request, res: Response) => {
         try {
-            let item = await this.model.update(req.body, {where: {id: req.params.id}});
-            return res.status(200).send(item);
-    }catch (error){
-            return res.status(409).send(error);
+            let item = await this.model.update(req.body as TAttributes , {where: {id: req.params.id}});
+            console.log(item);
+            if (item) return res.send(204);
+            return res.send(404, 'not found');
+    }catch (error) {
+            return res.send(error);
         }
     }
-    public async delete(req: Request, res: Response){
+    delete = async (req: Request, res: Response) => {
         try {
-             await this.model.destroy({where: {id: req.params.id}});
-             return res.status(200);
-        }catch (error){
-            return res.status(500).send(error);
+            let item = await this.model.destroy({where: {id: req.params.id}});
+            if (item) return res.send(204);
+            return res.send(404, 'not found');
+        }catch (error) {
+            return res.send(error);
         }
     }
 
