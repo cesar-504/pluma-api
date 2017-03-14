@@ -7,10 +7,13 @@
     "test": "tests"
   },
   "dependencies": {
+    "bufferutil": "^3.0.0",
     "restify": "^4.3.0",
     "sequelize": "^3.30.2",
     "sequelize-cli": "^2.5.1",
-    "sqlite3": "^3.1.8"
+    "sqlite3": "^3.1.8",
+    "utf-8-validate": "^3.0.1",
+    "ws": "^2.2.1"
   },
   "devDependencies": {
     "@types/chai": "^3.4.35",
