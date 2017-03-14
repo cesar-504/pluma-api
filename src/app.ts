@@ -25,6 +25,7 @@ sequelize.sync({force: true}).then(() => {
   // Table created
   models.Parking.create({
     capacity: 100,
+    currentlyOccupied: 0,
     name: 'estacionamiento1',
     open: true,
     requireID: false,
@@ -37,6 +38,6 @@ sequelize.sync({force: true}).then(() => {
 
 });
 
-api.listen(settings.port, function () {
+api.listen(settings.port, () => {
   console.log(`INFO: ${settings.name} is running at ${api.url}`);
 });

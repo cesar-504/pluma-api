@@ -1,36 +1,36 @@
 {
-  "name": "pluma-node-api",
-  "version": "1.0.0",
-  "description": "pluma app api rest server ",
-  "main": "src/app.js",
-  "directories": {
-    "test": "tests"
-  },
-  "dependencies": {
-    "restify": "^4.3.0",
-    "sequelize": "^3.30.2",
-    "sequelize-cli": "^2.5.1",
-    "sqlite3": "^3.1.8"
-  },
-  "devDependencies": {
-    "@types/chai": "^3.4.35",
-    "@types/chai-http": "0.0.30",
-    "@types/mocha": "^2.2.39",
-    "@types/node": "^7.0.5",
-    "@types/restify": "^2.0.41",
-    "@types/sequelize": "^3.4.40",
-    "chai": "^3.5.0",
-    "chai-http": "^3.0.0",
-    "mocha": "^3.2.0",
-    "nodemon": "^1.11.0",
-    "ts-node": "^2.1.0",
-    "typescript": "^2.2.1"
-  },
-  "scripts": {
-    "test": "mocha",
-    "start": "npm run build:live",
-    "build:live": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/app.ts"
-  },
-  "author": "",
-  "license": "ISC"
+    "name": "pluma-node-api",
+    "version": "1.0.0",
+    "description": "pluma app api rest server ",
+    "main": "src/app.js",
+    "directories": {
+        "test": "tests"
+    },
+    "dependencies": {
+        "restify": "^4.3.0",
+        "sequelize": "^3.30.2",
+        "sequelize-cli": "^2.5.1",
+        "sqlite3": "^3.1.8"
+    },
+    "devDependencies": {
+        "@types/chai": "^3.4.35",
+        "@types/chai-http": "0.0.30",
+        "@types/mocha": "^2.2.40",
+        "@types/node": "^7.0.8",
+        "@types/restify": "^2.0.41",
+        "@types/sequelize": "^4.0.46",
+        "chai": "^3.5.0",
+        "chai-http": "^3.0.0",
+        "mocha": "^3.2.0",
+        "nodemon": "^1.11.0",
+        "ts-node": "^2.1.0",
+        "typescript": "^2.2.1"
+    },
+    "scripts": {
+        "test": "mocha",
+        "start": "npm run build:live",
+        "build:live": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/app.ts"
+    },
+    "author": "",
+    "license": "ISC"
 }

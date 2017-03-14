@@ -1,32 +1,32 @@
 import { Next, Request, Response } from 'restify';
 import * as Sequelize from 'sequelize';
 import {models} from '../models/index';
-import { ParkingAttributes, ParkingInstance } from '../models/parkingModel';
+import { IParkingAttributes, IParkingInstance } from '../models/parkingModel';
 
 export default class RestController<TInstance, TAttributes> {
-    constructor(public model: Sequelize.Model<TInstance, TAttributes>) {
+    constructor(protected _model: Sequelize.Model<TInstance, TAttributes>) {
     }
     find = async(req: Request, res: Response) => {
-        console.log(this.model);
+        console.log(this._model);
         try {
-            res.send(await this.model.all());
+            res.send(await this._model.all());
         }catch (error) {
             res.send(error);
         }
     }
     findByID = async (req: Request, res: Response) => {
         try {
-            let item = await this.model.findById(req.params.id);
+            let item = await this._model.findById(req.params.id);
             if (item) return res.send(item);
             return res.send(404, 'not found');
 
-        }catch (error){
+        }catch (error) {
             return res.send(error);
         }
     }
     create = async (req: Request, res: Response) => {
         try {
-             let item = await this.model.create(req.body );
+             let item = await this._model.create(req.body );
              return res.send(201, item);
         }catch (error) {
             return res.send(error);
@@ -34,7 +34,7 @@ export default class RestController<TInstance, TAttributes> {
     }
     update = async (req: Request, res: Response) => {
         try {
-            let item = await this.model.update(req.body as TAttributes , {where: {id: req.params.id}});
+            let item = await this._model.update(req.body as TAttributes , {where: {id: req.params.id}});
             console.log(item);
             if (item) return res.send(204);
             return res.send(404, 'not found');
@@ -44,7 +44,7 @@ export default class RestController<TInstance, TAttributes> {
     }
     delete = async (req: Request, res: Response) => {
         try {
-            let item = await this.model.destroy({where: {id: req.params.id}});
+            let item = await this._model.destroy({where: {id: req.params.id}});
             if (item) return res.send(204);
             return res.send(404, 'not found');
         }catch (error) {

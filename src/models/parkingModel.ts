@@ -1,24 +1,27 @@
-import * as Sequelize from "sequelize";
-export interface ParkingAttributes {
+import * as Sequelize from 'sequelize';
+import { CostParkingAttributes } from './costParkingModel';
+export interface IParkingAttributes {
   name: string;
   capacity: number;
-  requireID:boolean;
-  open:boolean;
-  
+  currentlyOccupied: number;
+  requireID: boolean;
+  open: boolean;
+
 }
 
-export interface ParkingInstance extends Sequelize.Instance<ParkingAttributes> {
-  dataValues: ParkingAttributes;
+export interface IParkingInstance extends Sequelize.Instance<IParkingAttributes> {
+  dataValues: IParkingAttributes;
 }
 
 export default function(sequelize: Sequelize.Sequelize, dataTypes: Sequelize.DataTypes):
-  Sequelize.Model<ParkingInstance, ParkingAttributes> {
-  let Parking = sequelize.define<ParkingInstance, ParkingAttributes>("Parking", {
-    name: {type: dataTypes.STRING, allowNull: false,unique:true},
+  Sequelize.Model<IParkingInstance, IParkingAttributes> {
+  let Parking = sequelize.define<IParkingInstance, IParkingAttributes>('Parking', {
+    name: {type: dataTypes.STRING, allowNull: false, unique: true},
     description: {type: dataTypes.TEXT, allowNull: true},
     capacity: {type: dataTypes.INTEGER, allowNull: true},
-    requireID:{type: dataTypes.BOOLEAN, allowNull: false, defaultValue: false},
-    open:{type: dataTypes.BOOLEAN, allowNull: false, defaultValue:true}
+    currentlyOccupied: {type: dataTypes.INTEGER, allowNull: true},
+    requireID: {type: dataTypes.BOOLEAN, allowNull: false, defaultValue: false},
+    open: {type: dataTypes.BOOLEAN, allowNull: false, defaultValue: true},
 
   });
 
