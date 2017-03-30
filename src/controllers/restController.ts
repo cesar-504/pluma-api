@@ -1,18 +1,35 @@
+import * as jwt from 'jsonwebtoken';
 import { Next, Request, Response } from 'restify';
 import * as Sequelize from 'sequelize';
 import {models} from '../models/index';
 import { IParkingAttributes, IParkingInstance } from '../models/parkingModel';
-
+import { UserAttributes } from '../models/userModel';
 export default class RestController<TInstance, TAttributes> {
     constructor(protected _model: Sequelize.Model<TInstance, TAttributes>) {
     }
+    async createToken(body: any): void {
+        try {
+            return await jwt.sign('user', 'pass', <jwt.SignOptions> {expiresIn: '7 days'});
+        }catch (error) {
+            console.log(error);
+        }
+    }
+    async decodeToken(token: string) {
+        try {
+            return await jwt.verify(token, 'pass');
+        }catch (error) {
+            return error;
+        }
+    }
+
     find = async(req: Request, res: Response) => {
-        console.log(this._model);
+
         try {
             res.send(await this._model.all());
         }catch (error) {
             res.send(error);
         }
+
     }
     findByID = async (req: Request, res: Response) => {
         try {

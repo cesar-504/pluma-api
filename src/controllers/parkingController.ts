@@ -43,7 +43,6 @@ export default class ParkingController
                     }as IAccessReply);
                 }
             if (item.dataValues.requireID) {
-               
                 let user = await models.User.findById(req.body.userId || 0);
                 if (!user) {
                     return res.send(403, {
@@ -61,12 +60,20 @@ export default class ParkingController
                         userId: (req.body) ? (req.body.userId || null) : null,
                     }as IAccessReply);
 
-
         }catch (error) {
             return res.send(error);
         }
     }
     exit = async(req: Request, res: Response) => {
+        let asd = {
+            auth: true,
+            error: null,
+        }as IAccessReply;
+
+        let asd3 = <IAccessReply> {
+            auth: true,
+            error: null,
+        }as IAccessReply;
 
     }
 }
