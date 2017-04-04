@@ -18,11 +18,7 @@ api.use(restify.jsonp());
 api.use(restify.queryParser());
 api.use(restify.authorizationParser());
 api.use(restify.fullResponse());
-api.use((req: Request, res: Response, next: Next) => {
-    let text = req.authorization;
-    console.log('auth ' + text.credentials.valueOf);
-    next();
-});
+
 // api.use((req: Request, res: Response, next: Next ) => {
 //   console.log('MidleWare');
 //   next();

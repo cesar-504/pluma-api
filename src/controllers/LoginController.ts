@@ -12,11 +12,16 @@ export
 class LoginController {
     // constructor() {
     // }
+    auth = async(req: Request, res: Response) => {
+         let tokens = (req.headers.authorization as string).trim().split(/\s+/);
 
-}
-
-export async function auth(req: Request, res: Response, next: Next) {
-    let text = req.authorization;
-    console.log('auth ' + text);
-    next();
+         console.log(tokens);
+         if (tokens.length !== 2 || tokens[0].toLowerCase() !== 'bearer') return res.send(false);
+         let decodeToken = await jwt.verify(tokens[1], 'pass');
+         console.log(decodeToken);
+         return res.send(decodeToken);
+    }
+    login = async(req: Request, res: Response) => {
+        return res.send(await jwt.sign({user: 123, type:  'adm'}, 'pass'));
+    }
 }

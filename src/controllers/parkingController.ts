@@ -12,7 +12,7 @@ interface IAccessReply {
 interface IAccessRequest{
     idParking: number;
     idUser: number;
-    keyParking: number;
+    action: string;
 }
 export default class ParkingController
     extends RestController<IParkingInstance, IParkingAttributes> {
