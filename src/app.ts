@@ -1,6 +1,7 @@
 
 import * as fs from 'fs';
 import * as restify from 'restify';
+import { Next, Request, Response } from 'restify';
 import { settings } from './config/config';
 import {models, sequelize} from './models/index';
 import routes from './routes/routes';
@@ -17,7 +18,15 @@ api.use(restify.jsonp());
 api.use(restify.queryParser());
 api.use(restify.authorizationParser());
 api.use(restify.fullResponse());
-
+api.use((req: Request, res: Response, next: Next) => {
+    let text = req.authorization;
+    console.log('auth ' + text.credentials.valueOf);
+    next();
+});
+// api.use((req: Request, res: Response, next: Next ) => {
+//   console.log('MidleWare');
+//   next();
+// });
 // require("./routes/routes")(api);
 
 routes(api);

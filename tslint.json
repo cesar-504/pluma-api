@@ -8,8 +8,12 @@
             "single"
         ],
         "no-console": [],
-        "member-access": false
-
+        "member-access": false,
+        "variable-name": false,
+        "interface-name": [
+            false
+        ],
+        "eofline": false
     }
 
 }

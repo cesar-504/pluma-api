@@ -7,9 +7,9 @@ import { UserAttributes } from '../models/userModel';
 export default class RestController<TInstance, TAttributes> {
     constructor(protected _model: Sequelize.Model<TInstance, TAttributes>) {
     }
-    async createToken(body: any): void {
+    async createToken(body: any) {
         try {
-            return await jwt.sign('user', 'pass', <jwt.SignOptions> {expiresIn: '7 days'});
+            return await jwt.sign('user', 'pass', {expiresIn: '7 days'});
         }catch (error) {
             console.log(error);
         }
