@@ -13,15 +13,19 @@ class LoginController {
     // constructor() {
     // }
     auth = async(req: Request, res: Response) => {
+        try{
          let tokens = (req.headers.authorization as string).trim().split(/\s+/);
 
          console.log(tokens);
          if (tokens.length !== 2 || tokens[0].toLowerCase() !== 'bearer') return res.send(false);
-         let decodeToken = await jwt.verify(tokens[1], 'pass');
+         let decodeToken = await jwt.verify(tokens[1], 'pass2');
          console.log(decodeToken);
          return res.send(decodeToken);
+        }catch (error){
+            res.send(403, {error: error.message} );
+        }
     }
     login = async(req: Request, res: Response) => {
-        return res.send(await jwt.sign({user: 123, type:  'adm'}, 'pass'));
+        return res.send(await jwt.sign({user: 123, type:  'adm'}, 'pass2'));
     }
 }
