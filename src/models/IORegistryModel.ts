@@ -3,7 +3,7 @@ import * as Sequelize from 'sequelize';
 export interface IORegistryAttributes {
 
   // usuario;
-  type: string;
+  typeIO: string;
 }
 
 export interface IORegistryInstance extends Sequelize.Instance<IORegistryAttributes> {

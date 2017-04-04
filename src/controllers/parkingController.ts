@@ -52,7 +52,7 @@ export default class ParkingController
                     }as IAccessReply);
                 }
             }
-            let ioReg = await models.IORegistry.create({type: 'in'});
+            let ioReg = await models.IORegistry.create({typeIO: 'in'});
             return res.send(200, {
                         auth: true,
                         error: null,

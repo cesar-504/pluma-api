@@ -30,7 +30,7 @@ class DB {
         this.sequelize = new Sequelize(dbconf.database, dbconf.username, dbconf.password, dbconf);
         this.models = ({} as any);
         fs.readdirSync(__dirname).filter((file: string) => {
-            return (file !== this.basename);
+            return (file !== this.basename) && (/.*\.js$/.test(file));
         }).forEach((file: string) => {
             let model = this.sequelize.import(path.join(__dirname, file));
             console.log((model as any)['name']);
