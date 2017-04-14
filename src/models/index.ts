@@ -4,20 +4,20 @@ import * as Sequelize from 'sequelize';
 import * as dbConfig from '../config/sequelize/databaseConfig';
 import {AdministratorAttributes, AdministratorInstance} from './administratorModel';
 import {CostParkingAttributes, CostParkingInstance} from './costParkingModel';
+import { EntryAttributes, EntryInstance } from './entryModel';
 import { IORegistryAttributes, IORegistryInstance } from './IORegistryModel';
 import { IParkingAttributes, IParkingInstance } from './parkingModel';
-import {ProductAttributes, ProductInstance} from './productModel';
 import {UserAttributes, UserInstance} from './userModel';
 let env = 'dev';
 
 export interface ISequelizeModels {
   [key: string]: any;
-  Product: Sequelize.Model<ProductInstance, ProductAttributes>;
   Administrator: Sequelize.Model<AdministratorInstance, AdministratorAttributes>;
   CostParking: Sequelize.Model<CostParkingInstance, CostParkingAttributes>;
   IORegistry: Sequelize.Model<IORegistryInstance, IORegistryAttributes>;
   Parking: Sequelize.Model<IParkingInstance, IParkingAttributes>;
   User: Sequelize.Model<UserInstance, UserAttributes>;
+  Entry: Sequelize.Model<EntryInstance, EntryAttributes>;
 }
 
 class DB {
@@ -35,8 +35,8 @@ class DB {
             return (file !== this.basename) && (/.+\.(js|ts)$/.test(file));
         }).forEach((file: string) => {
             let model = this.sequelize.import(path.join(__dirname, file));
-            console.log((model as any)['name']);
-            this.models[(model as any)['name']] = model;
+            console.log((model as any).name);
+            this.models[(model as any).name] = model;
         });
 
         Object.keys(this.models).forEach((modelName: string) => {
@@ -47,9 +47,12 @@ class DB {
         console.log(this.models.Product);
         console.log(this.models.Parking);
         // relations
+        this.models.Parking.hasMany(this.models.Entry);
+        this.models.Entry.belongsTo(this.models.Parking);
+
         this.models.Parking.hasMany(this.models.CostParking);
         this.models.Parking.hasMany(this.models.IORegistry);
-        this.models.Parking.hasMany(this.models.User);
+        this.models.Parking.hasMany(this.models.User, {foreignKey: 'currentLocationId' });
         this.models.Parking.belongsToMany(this.models.Administrator, {through: 'AdministratorParking'});
 
         this.models.CostParking.belongsTo(this.models.Parking);
@@ -58,11 +61,11 @@ class DB {
         this.models.IORegistry.belongsTo(this.models.Parking);
 
         this.models.Administrator.belongsToMany(this.models.Parking, {through: 'AdministratorParking'});
-        this.models.Administrator.hasOne(this.models.User);
+        this.models.User.hasOne(this.models.Administrator);
 
         // this.models.User.hasOne(this.models.Administrator);
         this.models.User.hasMany(this.models.IORegistry);
-        this.models.User.belongsTo(this.models.Parking);
+        this.models.User.belongsTo(this.models.Parking, {foreignKey: 'currentLocationId' });
 
     }
 }

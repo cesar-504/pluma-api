@@ -26,23 +26,13 @@ api.use(restify.fullResponse());
 // require("./routes/routes")(api);
 
 routes(api);
-sequelize.sync({force: true}).then(() => {
-  // Table created
-  models.Parking.create({
-    capacity: 100,
-    currentlyOccupied: 0,
-    name: 'estacionamiento1',
-    open: true,
-    requireID: false,
-  });
-
-  return models.Product.create({
-    description: 'descripcion del producto1',
-    name: 'producto1',
-  });
-
-});
 
 api.listen(settings.port, () => {
   console.log(`INFO: ${settings.name} is running at ${api.url}`);
 });
+sequelize.sync().then(() => {
+  // Table created
+
+  
+
+  });

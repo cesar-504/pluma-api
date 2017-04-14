@@ -2,6 +2,7 @@
 import { Next, Request, Response, Server } from 'restify';
 import * as sequelize from 'sequelize';
 import AdministratorController from '../controllers/administratorController';
+import EntryController from '../controllers/entryController';
 import IORegistryController from '../controllers/IORegistryController';
 import { LoginController } from '../controllers/LoginController';
 import ParkingController from '../controllers/parkingController';
@@ -18,14 +19,17 @@ export default function  (api: Server) {
     api.get('/', (req: Request, res: Response) => {
         return res.send('Pluma Api');
     });
-    let parking = new ParkingController();
+    let entry = new EntryController();
     let login = new LoginController();
-    createRest('/api/parkings/', parking , api);
-    createRest('/api/administators/', new AdministratorController(), api);
+    createRest('/api/parkings/', new ParkingController() , api);
+    createRest('/api/administrators/', new AdministratorController(), api);
     createRest('/api/users/', new UserController(), api);
-    createRest('/api/io/', new IORegistryController(), api);
+    let ios = new IORegistryController();
+    api.get('/api/ios', ios.find);
+    api.get('/api/ios/:id', ios.findByID);
+    createRest('/api/entries/', entry, api);
 
-    api.get('/api/parkings/:id/access', parking.access);
+    api.post('/api/entries/access', entry.access);
     api.get('/api/login', login.login);
     api.get('/api/auth', login.auth);
 }

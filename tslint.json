@@ -13,7 +13,8 @@
         "interface-name": [
             false
         ],
-        "eofline": false
+        "eofline": false,
+        "object-literal-sort-keys": false
     }
 
 }
