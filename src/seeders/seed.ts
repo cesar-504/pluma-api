@@ -26,6 +26,7 @@ async function seed() {
       priceForHour: null,
       priceForRange: 5,
       usePriceForRange: true,
+      ParkingId: i,
     });
     // 2 Entries
     for (let o = 1; o <= 2; o++) {
