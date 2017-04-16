@@ -30,6 +30,8 @@ export default function  (api: Server) {
     createRest('/api/entries/', entry, api);
     api.post('/api/parkings/access', entry.access);
     api.post('/api/entries/access', entry.access);
+    api.post('/api/parkings/exit', entry.exit);
+    api.post('/api/entries/exit', entry.exit);
     api.get('/api/login', login.login);
     api.get('/api/auth', login.auth);
 }

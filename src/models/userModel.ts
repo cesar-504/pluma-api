@@ -6,6 +6,7 @@ export interface UserAttributes {
   credit: number;
   password: string;
   active: boolean;
+  currentLocationId?: number;
 
 }
 

@@ -35,7 +35,7 @@ export default class EntryController
 
     access = async(req: Request, res: Response) => {
         let request: IAccessRequest = req.body;
-        if (!request.action || !request.idEntry || !request.idUser) {
+        if (!request.action || !request.idEntry ) {
             return res.send(403, {
                         auth: false,
                         error: `invalid AccessRequest`,
@@ -49,22 +49,21 @@ export default class EntryController
         }
 
         try {
-            let item = await this._model.findById(request.idEntry, {include: [models.Parking]});
-            if (!item) {
+            let entry = await this._model.findById(request.idEntry, {include: [models.Parking]});
+            if (!entry) {
                 return res.send(404, {
                         idEntry: request.idEntry,
                         auth: false,
                         error: 'Entry not found',
                     }as IAccessReply);
             }
-            if (!item.dataValues.open) {
+            if (!entry.dataValues.open) {
                 return res.send(403, {
                         auth: false,
                         error: 'Entry is not open',
                     }as IAccessReply);
             }
-            let parking  = (item.dataValues as any).Parking.dataValues ;
-            console.log(parking);
+            let parking  = (entry.dataValues as any).Parking.dataValues ;
             if (!parking.open) {
                 return res.send(403, {
                         auth: false,
@@ -79,21 +78,34 @@ export default class EntryController
                         error: 'Full parking ',
                     }as IAccessReply);
                 }
+            let user = await models.User.findById(request.idUser || 0);
             if (parking.requireID) {
-                let user = await models.User.findById(req.body.userId || 0);
-
                 if (!user) {
                     return res.send(403, {
                         auth: false,
                         error: 'User not found',
-                        userId : req.body.userId || null,
+                        userId : request.idUser || null,
                     }as IAccessReply);
                 }
+
             }
+
             // let t = await sequelize.transaction();
             try {
-                let p = await models.Parking.findById(item.dataValues.ParkingId);
+                let p = await models.Parking.findById(entry.dataValues.ParkingId);
                 await p.increment('currentlyOccupied');
+                if (user) {
+                    if (user.dataValues.currentLocationId) {
+                        return res.send(403, {
+                            auth: false,
+                            error: 'The user is in a Parking: ' + p.dataValues.name,
+                            userId : request.idUser || null,
+                        }as IAccessReply);
+                    }
+                    user.dataValues.currentLocationId = p.getDataValue('id');
+                    await models.User.update(user.dataValues, {where: {id: user.getDataValue('id')}});
+                    // console.log(user.dataValues);
+                }
                 let ioReg = await models.IORegistry.create({
                         typeIO: 'access',
                         EntryId: request.idEntry,
@@ -108,7 +120,8 @@ export default class EntryController
                     }as IAccessReply);
             }catch (error) {
                // t.rollback();
-                throw(error);
+               console.log(error);
+               throw(error);
             }
 
         }catch (error) {
@@ -116,5 +129,81 @@ export default class EntryController
         }
 
     }
+    exit = async(req: Request, res: Response) => {
+        let request: IAccessRequest = req.body;
+        if (!request.action || !request.idEntry ) {
+            return res.send(403, {
+                        auth: false,
+                        error: `invalid AccessRequest`,
+                    }as IAccessReply);
+        }
+        if (!request || request.action !== 'exit') {
+            return res.send(403, {
+                        auth: false,
+                        error: `Action ${request.action} is not valid`,
+                    }as IAccessReply);
+        }
+        try {
+            let entry = await this._model.findById(request.idEntry, {include: [models.Parking]});
+            if (!entry) {
+                return res.send(404, {
+                        idEntry: request.idEntry,
+                        auth: false,
+                        error: 'Entry not found',
+                    }as IAccessReply);
+            }
+            if (!entry.dataValues.open) {
+                return res.send(403, {
+                        auth: false,
+                        error: 'Entry is not open',
+                    }as IAccessReply);
+            }
+            let parking  = (entry.dataValues as any).Parking.dataValues ;
+            let user = await models.User.findById(request.idUser || 0);
+            if (parking.requireID) {
+                if (!user) {
+                    return res.send(403, {
+                        auth: false,
+                        error: 'User not found',
+                        userId : request.idUser || null,
+                    }as IAccessReply);
+                }
 
+            }
+            try {
+                let p = await models.Parking.findById(entry.dataValues.ParkingId);
+                await p.decrement('currentlyOccupied');
+                if (user) {
+                    if (user.dataValues.currentLocationId !== p.getDataValue('id')) {
+                        return res.send(403, {
+                            auth: false,
+                            error: 'The user is not  in this Parking ',
+                            userId : request.idUser || null,
+                        }as IAccessReply);
+                    }
+                    user.dataValues.currentLocationId = null;
+                    await models.User.update(user.dataValues, {where: {id: user.getDataValue('id')}});
+                    // console.log(user.dataValues);
+                }
+                let ioReg = await models.IORegistry.create({
+                        typeIO: 'exit',
+                        EntryId: request.idEntry,
+                        UserId: request.idUser,
+                });
+               // t.commit();
+                return res.send(200, {
+                        auth: true,
+                        error: null,
+                        ioId: (ioReg.getDataValue('id') as number),
+                        userId: (request.idUser) ? (request.idUser || null) : null,
+                    }as IAccessReply);
+            }catch (error) {
+               // t.rollback();
+               console.log(error);
+               throw(error);
+            }
+        } catch (error) {
+            return res.send(error);
+        }
     }
+}
