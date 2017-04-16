@@ -28,7 +28,7 @@ export default function  (api: Server) {
     api.get('/api/ios', ios.find);
     api.get('/api/ios/:id', ios.findByID);
     createRest('/api/entries/', entry, api);
-
+    api.post('/api/parkings/access', entry.access);
     api.post('/api/entries/access', entry.access);
     api.get('/api/login', login.login);
     api.get('/api/auth', login.auth);

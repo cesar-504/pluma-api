@@ -17,7 +17,7 @@ async function seed() {
       capacity: 100,
       currentlyOccupied: 0,
       name: 'estacionamiento ' + i,
-      open: true,
+      open: (i !== 2),
       requireID: false,
     });
     models.CostParking.create({
@@ -31,7 +31,7 @@ async function seed() {
     for (let o = 1; o <= 2; o++) {
       models.Entry.create({
         name: 'entrada' + o,
-        open: true,
+        open: (o !== 2),
         ParkingId: i,
       });
     }

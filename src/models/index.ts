@@ -49,16 +49,15 @@ class DB {
         // relations
         this.models.Parking.hasMany(this.models.Entry);
         this.models.Entry.belongsTo(this.models.Parking);
-
+        this.models.Entry.hasMany(this.models.IORegistry);
         this.models.Parking.hasMany(this.models.CostParking);
-        this.models.Parking.hasMany(this.models.IORegistry);
         this.models.Parking.hasMany(this.models.User, {foreignKey: 'currentLocationId' });
         this.models.Parking.belongsToMany(this.models.Administrator, {through: 'AdministratorParking'});
 
         this.models.CostParking.belongsTo(this.models.Parking);
 
         this.models.IORegistry.belongsTo(this.models.User);
-        this.models.IORegistry.belongsTo(this.models.Parking);
+        this.models.IORegistry.belongsTo(this.models.Entry , { foreignKey: { allowNull: false }, onDelete: 'CASCADE' });
 
         this.models.Administrator.belongsToMany(this.models.Parking, {through: 'AdministratorParking'});
         this.models.User.hasOne(this.models.Administrator);
