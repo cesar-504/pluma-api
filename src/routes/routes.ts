@@ -18,7 +18,7 @@ export default function  (api: Server) {
     //     }
     // });
     api.get('/', (req: Request, res: Response) => {
-        return res.send('Pluma Api');
+        return res.send('Api control de estacionamiento');
     });
     let entry = new EntryController();
     let login = new LoginController();
