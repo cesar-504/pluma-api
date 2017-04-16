@@ -5,7 +5,7 @@ export interface CostParkingAttributes {
   priceForHour: number;
   priceForRange: number;
   usePriceForRange: boolean;
-
+  ParkingId: number;
 }
 
 export interface CostParkingInstance extends Sequelize.Instance<CostParkingAttributes> {
