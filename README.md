@@ -63,9 +63,9 @@ Retorno:
 
 
 Todas las rutas marcadas como rest tienen las sigientes rutas:
-ruta    [get] devuelve todos los registros.
-ruta/:id     [get] devuelve un registro por id.
-ruta    [post] crea un registro.
-ruta/:id    [put] edita un registro por id.
-ruta/:id    [del] elimina un registro por id.
+- ruta    [get] devuelve todos los registros.
+- ruta/:id     [get] devuelve un registro por id.
+- ruta    [post] crea un registro.
+- ruta/:id    [put] edita un registro por id.
+- ruta/:id    [del] elimina un registro por id.
 
