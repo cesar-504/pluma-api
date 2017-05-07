@@ -44,6 +44,7 @@ export default function  (api: Server) {
 
 function createRest<TI, TA>(route: string, ctr: RestController<TI, TA>, api: Server) {
     api.get(route, ctr.find);
+    api.get(route + '/last', ctr.last);
     api.get(route + '/:id', ctr.findByID);
     api.post(route, (ctr.create));
     api.put(route + '/:id', ctr.update);

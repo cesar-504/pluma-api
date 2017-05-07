@@ -21,11 +21,50 @@ export default class RestController<TInstance, TAttributes> {
             return error;
         }
     }
+    async parseParamenters( params: any ): Promise<Sequelize.FindOptions> {
+        let count = parseInt(params.count, 10) || 100;
+        if (count > 100) count = 100;
+        let max_id = parseInt(params.max_id, 10);
+        let since_id = parseInt(params.since_id, 10);
+        let desc = (params.desc) ? params.desc.toLowerCase() : 'false';
+        desc = (desc === 'true');
+        if (count && isNaN(count)) throw  new Error('incorrect format: count = ' + count);
+        if (max_id && isNaN(max_id)) throw  new Error( 'incorrect format: max_id = ' + max_id);
+        if (since_id && isNaN(since_id)) throw  new Error( 'incorrect format: since_id = ' + since_id);
+        let whereOp = {
+            id: {$and: {} as any },
+        };
+        if (max_id) {
+            whereOp.id.$and.$lt = max_id;
+            if (!since_id){
 
+                whereOp.id.$and.$gte = max_id - count;
+            }
+        }
+        if (since_id) {
+            if (!max_id)
+                whereOp.id.$and.$lt = since_id + count;
+            whereOp.id.$and.$gte = since_id;
+        }
+        let findOp: Sequelize.FindOptions = {
+            limit: count ,
+            order: [['id']],
+            where: whereOp,
+        };
+        if (desc) (findOp.order as any )[0].push('DESC');
+        return findOp;
+
+    }
+
+    last = async(req: Request, res: Response, options?: Sequelize.FindOptions) => {
+        if (!req.params.desc) req.params.desc = 'true';
+        return await this.find(req, res, options);
+
+    }
     find = async(req: Request, res: Response, options?: Sequelize.FindOptions) => {
 
         try {
-            res.send(await this._model.all());
+            res.send(await this._model.all(await this.parseParamenters(req.params)));
         }catch (error) {
             res.send(error);
         }
