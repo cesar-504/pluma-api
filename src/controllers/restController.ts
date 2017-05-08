@@ -26,17 +26,34 @@ export default class RestController<TInstance, TAttributes> {
         if (count > 100) count = 100;
         let max_id = parseInt(params.max_id, 10);
         let since_id = parseInt(params.since_id, 10);
-        let desc = (params.desc) ? params.desc.toLowerCase() : 'false';
-        desc = (desc === 'true');
+        let orderParams = (params.order) ? params.order.replace(/\s+/g, '').split(',') as string[] : undefined ;
+        let descParams = (params.desc) ? params.desc.replace(/\s+/g, '').split(',') as string[] : undefined ;
         if (count && isNaN(count)) throw  new Error('incorrect format: count = ' + count);
         if (max_id && isNaN(max_id)) throw  new Error( 'incorrect format: max_id = ' + max_id);
         if (since_id && isNaN(since_id)) throw  new Error( 'incorrect format: since_id = ' + since_id);
         let whereOp = {
             id: {$and: {} as any },
         };
+        let orderOp: string[][] = [];
+        if (orderParams)
+            for (let i = 0; i < orderParams.length; i++) {
+                orderOp[i] = [orderParams[i]];
+
+            }
+        if (descParams)
+        for (let p of descParams ){
+            let b = false;
+            orderOp.forEach((e) => {
+                if (e[0] === p) {
+                    b = true;
+                    e.push('DESC');
+                }
+            });
+            if (!b) orderOp.push([p, 'DESC']);
+        }
         if (max_id) {
             whereOp.id.$and.$lt = max_id;
-            if (!since_id){
+            if (!since_id) {
 
                 whereOp.id.$and.$gte = max_id - count;
             }
@@ -48,16 +65,15 @@ export default class RestController<TInstance, TAttributes> {
         }
         let findOp: Sequelize.FindOptions = {
             limit: count ,
-            order: [['id']],
+            order: orderOp,
             where: whereOp,
         };
-        if (desc) (findOp.order as any )[0].push('DESC');
         return findOp;
 
     }
 
     last = async(req: Request, res: Response, options?: Sequelize.FindOptions) => {
-        if (!req.params.desc) req.params.desc = 'true';
+        if (!req.params.desc) req.params.desc.push('id');
         return await this.find(req, res, options);
 
     }
