@@ -1,26 +1,14 @@
 import * as jwt from 'jsonwebtoken';
 import { Next, Request, Response } from 'restify';
 import * as Sequelize from 'sequelize';
+import { auth } from '../controllers/LoginController';
 import {models} from '../models/index';
 import { IParkingAttributes, IParkingInstance } from '../models/parkingModel';
 import { UserAttributes } from '../models/userModel';
 export default class RestController<TInstance, TAttributes> {
     constructor(protected _model: Sequelize.Model<TInstance, TAttributes>) {
     }
-    async createToken(body: any) {
-        try {
-            return await jwt.sign('user', 'pass', {expiresIn: '7 days'});
-        }catch (error) {
-            console.log(error);
-        }
-    }
-    async decodeToken(token: string) {
-        try {
-            return await jwt.verify(token, 'pass');
-        }catch (error) {
-            return error;
-        }
-    }
+
     async parseParamenters( params: any ): Promise<Sequelize.FindOptions> {
         let count = parseInt(params.count, 10) || 100;
         if (count > 100) count = 100;
@@ -73,12 +61,14 @@ export default class RestController<TInstance, TAttributes> {
     }
 
     last = async(req: Request, res: Response, options?: Sequelize.FindOptions) => {
+
         if (!req.params.desc) req.params.desc.push('id');
         return await this.find(req, res, options);
 
     }
     find = async(req: Request, res: Response, options?: Sequelize.FindOptions) => {
-
+        // let u = await auth(req.headers.authorization);
+        // if (!u.user || !u.adm) return res.send(401, {error: 'Unauthorized'});
         try {
             res.send(await this._model.all(await this.parseParamenters(req.params)));
         }catch (error) {

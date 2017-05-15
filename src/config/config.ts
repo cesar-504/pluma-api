@@ -4,18 +4,26 @@ export interface Config {
   port: number;
   env: string;
   version: string;
+
 }
 
-let env = process.env.NODE_ENV || 'development';
+export interface Keys {
+  jwt_key: string;
+}
 
-export let settings: Config = {
+let envVar = process.env.NODE_ENV || 'dev';
+if (envVar === 'production') {
+  envVar = 'prod';
+  // other production settings
+}
+
+export const settings: Config = {
   name: 'pluma-api-server',
   version: '1.0.0',
   port: process.env.PORT || 3001,
-  env: 'dev',
+  env: envVar,
 };
 
-if (env === 'production') {
-  settings.env = 'prod';
-  // other production settings
-}
+export const keys: Keys = {
+  jwt_key : process.env.JWT_KEY || 'test_J43H634KFFgG#$',
+};

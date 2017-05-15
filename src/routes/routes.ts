@@ -38,8 +38,7 @@ export default function  (api: Server) {
     api.post('/api/entries/access', entry.access);
     api.post('/api/parkings/exit', entry.exit);
     api.post('/api/entries/exit', entry.exit);
-    api.get('/api/login', login.login);
-    api.get('/api/auth', login.auth);
+    api.post('/api/login', login.login);
 }
 
 function createRest<TI, TA>(route: string, ctr: RestController<TI, TA>, api: Server) {
