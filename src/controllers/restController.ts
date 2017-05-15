@@ -61,8 +61,7 @@ export default class RestController<TInstance, TAttributes> {
     }
 
     last = async(req: Request, res: Response, options?: Sequelize.FindOptions) => {
-
-        if (!req.params.desc) req.params.desc.push('id');
+        if (!req.params.desc) req.params.desc = 'id';
         return await this.find(req, res, options);
 
     }
