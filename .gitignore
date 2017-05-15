@@ -85,5 +85,4 @@ typings/
 ## Js Compiled
 dist/
 
-db.dev.sqlite
-db.test.sqlite
+*.sqlite
