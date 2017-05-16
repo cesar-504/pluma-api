@@ -11,12 +11,13 @@ export interface Keys {
   jwt_key: string;
 }
 
-let envVar = process.env.NODE_ENV || 'dev';
+let envVar = process.env.NODE_ENV || 'devs';
 if (envVar === 'production') {
   envVar = 'prod';
+
   // other production settings
 }
-
+console.log(envVar);
 export const settings: Config = {
   name: 'pluma-api-server',
   version: '1.0.0',

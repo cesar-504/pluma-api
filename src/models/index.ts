@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as Sequelize from 'sequelize';
+import { settings } from '../config/config';
 import * as dbConfig from '../config/sequelize/databaseConfig';
 import {AdministratorAttributes, AdministratorInstance} from './administratorModel';
 import {CostParkingAttributes, CostParkingInstance} from './costParkingModel';
@@ -8,8 +9,6 @@ import { EntryAttributes, EntryInstance } from './entryModel';
 import { IORegistryAttributes, IORegistryInstance } from './IORegistryModel';
 import { IParkingAttributes, IParkingInstance } from './parkingModel';
 import {UserAttributes, UserInstance} from './userModel';
-let env = 'dev';
-
 export interface ISequelizeModels {
   [key: string]: any;
   Administrator: Sequelize.Model<AdministratorInstance, AdministratorAttributes>;
@@ -26,16 +25,14 @@ class DB {
     private basename: string;
     constructor() {
         this.basename = path.basename(module.filename);
-        let dbconf = dbConfig.dbConfigs[env];
-        this.sequelize = new Sequelize(dbconf.database, dbconf.username, dbconf.password, dbconf);
+        let dbconf = dbConfig.dbConfigs[settings.env];
+        if (dbconf.uri)  this.sequelize = new Sequelize(dbconf.uri, dbconf);
+        else this.sequelize = new Sequelize(dbconf.database, dbconf.username, dbconf.password, dbconf);
         this.models = ({} as any);
         fs.readdirSync(__dirname).filter((file: string) => {
-
-            console.log(file + 'test' + /.+\.(js|ts)$/.test(file) );
             return (file !== this.basename) && (/.+\.(js|ts)$/.test(file));
         }).forEach((file: string) => {
             let model = this.sequelize.import(path.join(__dirname, file));
-            console.log((model as any).name);
             this.models[(model as any).name] = model;
         });
 
@@ -44,8 +41,6 @@ class DB {
                 this.models[modelName].associate(this.models);
             }
         });
-        console.log(this.models.Product);
-        console.log(this.models.Parking);
         // relations
         this.models.Parking.hasMany(this.models.Entry);
         this.models.Entry.belongsTo(this.models.Parking);

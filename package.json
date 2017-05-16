@@ -21,6 +21,8 @@
     "jsonwebtoken": "^7.3.0",
     "mocha": "^3.2.0",
     "nodemon": "^1.11.0",
+    "pg": "^6.2.2",
+    "pg-hstore": "^2.3.2",
     "restify": "^4.3.0",
     "restify-jwt": "^0.4.0",
     "sequelize": "^3.30.4",
